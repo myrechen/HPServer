@@ -8,27 +8,16 @@
 #include <unistd.h>
 #include <ctype.h>
 #include "tcpserver.h"
+#include "epollwrap.h"
 
-TcpServer::TcpServer()
+TcpServer::TcpServer(int port, const char *IP, int _opt)
 {
-    m_lfd = socket(PF_INET, SOCK_STREAM, 0);    // 获取监听文件描述符
-    
-	int opt = 1;
-	setsockopt(m_lfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(int));   //设置端口复用
+    m_port = port;
+    m_lfd = getSocketAndBind(port, IP, _opt);
+    Listen(m_lfd, SOMAXCONN);
 
-    struct sockaddr_in serv;
-	bzero(&serv, sizeof(serv));
-	serv.sin_family = AF_INET;
-	serv.sin_addr.s_addr = htonl(INADDR_ANY);
-	serv.sin_port = htons(9000);
-    bind(m_lfd, (sockaddr*)&serv, sizeof(serv));
-    listen(m_lfd, SOMAXCONN);
-
-    m_epfd = epoll_create(1);   // 创建epoll树
-    epoll_event ev;
-	ev.data.fd = m_lfd;       //将lfd上epoll树
-	ev.events = EPOLLIN;
-	epoll_ctl(m_epfd, EPOLL_CTL_ADD, m_lfd, &ev);
+    m_epfd = createEpoll();
+    addFdToEpoll(m_epfd, m_lfd, EPOLLIN);
 }
 
 TcpServer::~TcpServer()
@@ -37,13 +26,13 @@ TcpServer::~TcpServer()
 
 void TcpServer::Run()
 {
+    printf("tcp server running at %d\n", m_port);
+
     int nready;
     int sockfd, cfd;
     epoll_event ev;
     struct epoll_event events[1024];
     char buf[1024];
-    
-    printf("tcp server 开启\n");
     
     while(1)
     {
