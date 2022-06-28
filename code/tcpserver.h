@@ -7,6 +7,7 @@
 
 class EventReactor;
 class TcpConnection;
+class Acceptor;
 
 class TcpServer
 {
@@ -16,9 +17,10 @@ private:
     int m_port;
 
     EventReactor *m_reactor;
+    Acceptor *acceptor;
 
     std::map<int, TcpConnection *> m_TcpConnectionMap;  // 保存tcp连接
-    
+
 public:
     TcpServer(int port, const char *IP = NULL, int _opt = 1);
     ~TcpServer();
@@ -26,7 +28,5 @@ public:
     void addTcpConnection(int fd, TcpConnection *newConnection);    // 添加新连接到map
     void closeTcpConnection(int fd);     // 关闭连接并delete
 };
-
-int handleNewConnetion(int epfd, int lfd, TcpServer *tcpserver);
 
 #endif // _TCPSERVER_H_

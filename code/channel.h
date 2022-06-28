@@ -4,7 +4,7 @@
 #include <sys/epoll.h>
 
 class TcpServer;
-typedef int (* eventCallback)(int epfd, int fd, TcpServer *tcpserver);
+typedef int (* eventCallback)(TcpServer *tcpserver, int epfd, int cfd);
 
 class Channel
 {

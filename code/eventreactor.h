@@ -10,7 +10,7 @@ private:
     int m_epfd;
     TcpServer *tcpserver;
 public:
-    EventReactor(int epfd, TcpServer *_tcpserver);
+    EventReactor(TcpServer *_tcpserver, int epfd);
     ~EventReactor();
     void Run();     // 进入事件循环
 };

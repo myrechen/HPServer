@@ -16,6 +16,6 @@ public:
     int getChannelFd();
 };
 
-int handleReadEvent(int epfd, int cfd, TcpServer *tcpserver);
+int handleReadEvent(TcpServer *tcpserver, int epfd, int cfd);
 
 #endif // _TCPCONNECTION_H_

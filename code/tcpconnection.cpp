@@ -31,7 +31,7 @@ int TcpConnection::getChannelFd()
     return clientChannel->getFd();
 }
 
-int handleReadEvent(int epfd, int cfd, TcpServer *tcpserver)
+int handleReadEvent(TcpServer *tcpserver, int epfd, int cfd)
 {
     char buf[1024];
     while (1)
