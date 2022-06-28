@@ -2,12 +2,15 @@
 #ifndef _EVENTREACTOR_H_
 #define _EVENTREACTOR_H_
 
+class TcpServer;
+
 class EventReactor
 {
 private:
     int m_epfd;
+    TcpServer *tcpserver;
 public:
-    EventReactor(int epfd);
+    EventReactor(int epfd, TcpServer *_tcpserver);
     ~EventReactor();
     void Run();     // 进入事件循环
 };

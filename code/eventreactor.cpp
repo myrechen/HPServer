@@ -2,9 +2,10 @@
 // #include <errno.h>
 #include "eventreactor.h"
 #include "channel.h"
-EventReactor::EventReactor(int epfd)
+EventReactor::EventReactor(int epfd, TcpServer *_tcpserver)
 {
     m_epfd = epfd;
+    tcpserver = _tcpserver;
 }
 
 EventReactor::~EventReactor()
@@ -32,7 +33,7 @@ void EventReactor::Run()
         {// 此时reactor不用关心是哪个文件描述符(监听 or 通信)发生事件, 要进行什么操作(新连接 or 读数据), 调用对应的回调函数即可
             ch = (Channel *)events[i].data.ptr;
             sockfd = ch->getFd();
-            ch->readCallback(m_epfd, sockfd);
+            ch->readCallback(m_epfd, sockfd, tcpserver);
         }
     }
 }

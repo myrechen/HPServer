@@ -3,7 +3,8 @@
 
 #include <sys/epoll.h>
 
-typedef int (* eventCallback)(int epfd, int fd);
+class TcpServer;
+typedef int (* eventCallback)(int epfd, int fd, TcpServer *tcpserver);
 
 class Channel
 {

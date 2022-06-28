@@ -1,4 +1,4 @@
-// socket bind 等相关函数的错误处理封装
+// socket bind listen accept等相关函数的错误处理封装
 #ifndef __WRAP_H__
 #define __WRAP_H__
 

@@ -12,6 +12,10 @@ Channel::Channel(int epfd, int fd)
 
 Channel::~Channel()
 {
+    //将sockfd对应的事件就节点从epoll树上删除
+    printf("关闭channel:[%d]\n", m_fd);
+    epoll_ctl(m_epfd, EPOLL_CTL_DEL, m_fd, NULL);
+    close(m_fd);
 }
 
 // void Channel::setEvents(uint32_t events)
