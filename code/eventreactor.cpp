@@ -33,7 +33,14 @@ void EventReactor::Run()
         {// 此时reactor不用关心是哪个文件描述符(监听 or 通信)发生事件, 要进行什么操作(新连接 or 读数据), 调用对应的回调函数即可
             ch = (Channel *)events[i].data.ptr;
             sockfd = ch->getFd();
-            ch->readCallback(tcpserver, m_epfd, sockfd);
+            if(events[i].events == EPOLLIN)
+            {
+                ch->readCallback(tcpserver, ch->m_connection, m_epfd, sockfd);
+            }
+            else if(events[i].events == EPOLLOUT)
+            {
+                ch->writeCallback(tcpserver, ch->m_connection, m_epfd, sockfd);
+            }
         }
     }
 }

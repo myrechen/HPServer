@@ -8,7 +8,7 @@ Acceptor::Acceptor(int epfd, int port, const char *IP, int _opt)
 {
     m_lfd = getSocketAndBind(port, IP, _opt);   // 获取监听文件描述符
 
-    listenChannel = new Channel(epfd, m_lfd);
+    listenChannel = new Channel(epfd, m_lfd, nullptr);
     listenChannel->addToEpoll(EPOLLIN);
     // 监听文件描述符发生事件时,是有新连接请求, 回调函数handleNewConnetion()
     listenChannel->readCallback = handleNewConnetion;
@@ -27,7 +27,7 @@ int Acceptor::getChannelFd()
     return m_lfd;
 }
 
-int handleNewConnetion(TcpServer *tcpserver, int epfd, int lfd)
+int handleNewConnetion(TcpServer *tcpserver, TcpConnection *connection, int epfd, int lfd)
 {
     printf("有连接请求\n");
     // 获得新TcpConnection对象

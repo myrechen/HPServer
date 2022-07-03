@@ -6,6 +6,7 @@
 
 class Channel;
 class TcpServer;
+class TcpConnection;
 
 class Acceptor
 {
@@ -18,6 +19,6 @@ public:
     int getChannelFd();
 };
 
-int handleNewConnetion(TcpServer *tcpserver, int epfd, int lfd);
+int handleNewConnetion(TcpServer *tcpserver,  TcpConnection *connection, int epfd, int lfd);
 
 #endif // _ACCEPTOR_H_
